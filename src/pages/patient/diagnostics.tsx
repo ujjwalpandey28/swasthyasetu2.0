@@ -25,6 +25,8 @@ export function DiagnosticsPage() {
       <PageHeader
         title="Diagnostic Reports"
         subtitle="View your lab tests and imaging reports"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
       />
       <div className="grid gap-4 sm:grid-cols-2">
         {reports.slice().reverse().map((r) => (

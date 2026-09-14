@@ -43,7 +43,12 @@ export function FindFacilityPage() {
 
   return (
     <div>
-      <PageHeader title="Find a Facility" subtitle="Nearby public health facilities, sorted by distance" />
+      <PageHeader
+        title="Find a Facility"
+        subtitle="Nearby public health facilities, sorted by distance"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
+      />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row">
         <Input
@@ -80,7 +85,7 @@ export function FindFacilityPage() {
                 <p className="text-xs text-muted">Distance</p>
               </div>
               <div className="rounded-lg bg-green-50 p-2">
-                <p className="text-lg font-bold text-green-700">{f.distanceKm && f.availableBeds > 0 ? f.availableBeds : "—"}</p>
+                <p className="text-lg font-bold text-green-700">{(f.availableBeds ?? 0) > 0 ? f.availableBeds : "—"}</p>
                 <p className="text-xs text-muted">Beds Free</p>
               </div>
               <div className="rounded-lg bg-sky-50 p-2">

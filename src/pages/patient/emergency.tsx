@@ -25,6 +25,8 @@ export function EmergencyPage() {
       <PageHeader
         title="Emergency Assistance"
         subtitle="Immediate help when you need it most"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
       />
 
       {!active ? (
@@ -108,7 +110,7 @@ export function EmergencyPage() {
           <Card className="mt-4">
             <h3 className="font-semibold">Your health-critical info shared with facility</h3>
             <ul className="mt-2 space-y-1 text-sm">
-              <li>⚠ Blood group {info.nearestFacility.availableBeds >= 0 && "O+"} · <span className="text-red-600">Allergies: Penicillin, Sulfa</span></li>
+              <li>⚠ Blood group {(info.nearestFacility.availableBeds ?? 0) >= 0 && "O+"} · <span className="text-red-600">Allergies: Penicillin, Sulfa</span></li>
               <li>Active conditions: Hypertension, Type 2 Diabetes</li>
               <li>Current medications will be visible to attending staff</li>
             </ul>

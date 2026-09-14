@@ -41,6 +41,8 @@ export function MedicineAvailabilityPage() {
       <PageHeader
         title="Medicine Availability"
         subtitle="Check medicine stock at nearby facilities"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
       />
       <div className="mb-4 max-w-xs">
         <Input

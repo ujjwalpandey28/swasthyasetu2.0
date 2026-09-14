@@ -35,6 +35,8 @@ export function ReferralStatusPage() {
       <PageHeader
         title="Referral Status"
         subtitle="Track the progress of your referrals"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
       />
       <div className="space-y-4">
         {referrals.length === 0 && (

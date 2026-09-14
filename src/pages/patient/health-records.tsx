@@ -22,6 +22,8 @@ export function HealthRecordsPage() {
       <PageHeader
         title="My Health Records"
         subtitle="Your complete medical history across all facilities"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
         actions={
           <>
             <Button variant="outline" onClick={handlePrint}>

@@ -2,7 +2,7 @@ import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { RiskLevel } from "@/dto/constants/RiskLevel";
 
-const tone: Record<RiskLevel | "GREEN" | "YELLOW" | "RED" | "INFO", string> = {
+const tone: Record<string, string> = {
   LOW: "bg-green-100 text-green-700",
   GREEN: "bg-green-100 text-green-700",
   MODERATE: "bg-amber-100 text-amber-800",
@@ -16,7 +16,7 @@ export function RiskBadge({
   level,
   className,
 }: {
-  level: RiskLevel | "GREEN" | "YELLOW" | "RED" | "INFO";
+  level: RiskLevel | "GREEN" | "YELLOW" | "RED" | "INFO" | "LOW" | "MODERATE" | "HIGH";
   className?: string;
 }) {
   const label =

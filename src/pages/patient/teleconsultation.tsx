@@ -33,6 +33,8 @@ export function TeleconsultationPage() {
       <PageHeader
         title="Teleconsultation"
         subtitle="Consult a doctor from home"
+        backTo="/patient"
+        backLabel="Back to Patient Dashboard"
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {slots.map((s) => (

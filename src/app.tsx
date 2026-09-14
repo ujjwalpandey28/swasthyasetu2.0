@@ -5,9 +5,13 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { LoginPage } from "@/pages/auth/login";
 import { RegisterPage } from "@/pages/auth/register";
 
+// Patient Portal
 import { PatientDashboard } from "@/pages/patient/dashboard";
-import { FindFacilityPage } from "@/pages/patient/find-facility";
+import { MyQRPage } from "@/pages/patient/my-qr";
+import { HealthCardPage } from "@/pages/patient/health-card";
 import { AppointmentsPage } from "@/pages/patient/appointments";
+import { PatientBillsPage } from "@/pages/patient/bills";
+import { FindFacilityPage } from "@/pages/patient/find-facility";
 import { HealthRecordsPage } from "@/pages/patient/health-records";
 import { MedicineAvailabilityPage } from "@/pages/patient/medicine-availability";
 import { DiagnosticsPage } from "@/pages/patient/diagnostics";
@@ -15,6 +19,20 @@ import { ReferralStatusPage } from "@/pages/patient/referral-status";
 import { TeleconsultationPage } from "@/pages/patient/teleconsultation";
 import { EmergencyPage } from "@/pages/patient/emergency";
 
+// Doctor Portal
+import { DoctorDashboard } from "@/pages/doctor/dashboard";
+import { DoctorConsultationPage } from "@/pages/doctor/consultation";
+
+// Hospital Staff / Reception Portal
+import { HospitalDashboard } from "@/pages/hospital/dashboard";
+
+// Lab / Diagnostics Portal
+import { LabDashboard } from "@/pages/lab/dashboard";
+
+// Pharmacy Portal
+import { PharmacyDashboard } from "@/pages/pharmacy/dashboard";
+
+// Healthcare Worker Portal
 import { WorkerDashboard } from "@/pages/healthcare_worker/dashboard";
 import { WorkerPatientsPage } from "@/pages/healthcare_worker/patients";
 import { TriagePage } from "@/pages/healthcare_worker/triage";
@@ -24,7 +42,9 @@ import { FollowUpsPage } from "@/pages/healthcare_worker/follow-ups";
 import { WorkerReferralsPage } from "@/pages/healthcare_worker/referrals";
 import { OfflineSyncPage } from "@/pages/healthcare_worker/offline-sync";
 
+// Admin Portal
 import { AdminDashboard } from "@/pages/admin/dashboard";
+import { AuditLogsPage } from "@/pages/admin/audit-logs";
 import { QueuePage } from "@/pages/admin/queue";
 import { WorkloadPage } from "@/pages/admin/workload";
 import { AdminMedicinesPage } from "@/pages/admin/medicines";
@@ -33,8 +53,25 @@ import { AdminHighRiskPage } from "@/pages/admin/high-risk";
 import { AdminDiagnosticsPage } from "@/pages/admin/diagnostics";
 import { AnalyticsPage } from "@/pages/admin/analytics";
 
+// Security Portal
+import { SecurityDashboard } from "@/pages/security/dashboard";
+
+// Super Admin Portal
+import { SuperAdminDashboard } from "@/pages/super_admin/dashboard";
+
 import { NotFoundPage } from "@/pages/utils/NotFound";
 import { UserRole } from "@/dto/constants/UserRole";
+
+import { useAuthStore } from "@/stores/authStore";
+import { roleRoutes } from "@/components/shared/DemoSwitcher";
+
+function RootRedirect() {
+  const user = useAuthStore((s) => s.user);
+  if (user?.role && roleRoutes[user.role]) {
+    return <Navigate to={roleRoutes[user.role]} replace />;
+  }
+  return <Navigate to="/login" replace />;
+}
 
 export function App() {
   return (
@@ -44,17 +81,32 @@ export function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Patient portal */}
+          {/* 1. Patient Portal */}
           <Route
             element={
-              <ProtectedRoute roles={[UserRole.PATIENT]}>
+              <ProtectedRoute
+                roles={[
+                  UserRole.PATIENT,
+                  UserRole.DOCTOR,
+                  UserRole.HEALTHCARE_WORKER,
+                  UserRole.HOSPITAL_STAFF,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.LAB,
+                  UserRole.PHARMACY,
+                  UserRole.SECURITY,
+                ]}
+              >
                 <AppLayout />
               </ProtectedRoute>
             }
           >
             <Route path="/patient" element={<PatientDashboard />} />
-            <Route path="/patient/find-facility" element={<FindFacilityPage />} />
+            <Route path="/patient/my-qr" element={<MyQRPage />} />
+            <Route path="/patient/health-card" element={<HealthCardPage />} />
             <Route path="/patient/appointments" element={<AppointmentsPage />} />
+            <Route path="/patient/bills" element={<PatientBillsPage />} />
+            <Route path="/patient/find-facility" element={<FindFacilityPage />} />
             <Route path="/patient/health-records" element={<HealthRecordsPage />} />
             <Route path="/patient/medicine-availability" element={<MedicineAvailabilityPage />} />
             <Route path="/patient/diagnostics" element={<DiagnosticsPage />} />
@@ -63,10 +115,95 @@ export function App() {
             <Route path="/patient/emergency" element={<EmergencyPage />} />
           </Route>
 
-          {/* Worker portal */}
+          {/* 2. Doctor Portal */}
           <Route
             element={
-              <ProtectedRoute roles={[UserRole.HEALTHCARE_WORKER]}>
+              <ProtectedRoute
+                roles={[
+                  UserRole.DOCTOR,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.HEALTHCARE_WORKER,
+                  UserRole.HOSPITAL_STAFF,
+                ]}
+              >
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/doctor" element={<DoctorDashboard />} />
+            <Route path="/doctor/consultation" element={<DoctorConsultationPage />} />
+          </Route>
+
+          {/* 3. Hospital Staff / Reception Portal */}
+          <Route
+            element={
+              <ProtectedRoute
+                roles={[
+                  UserRole.HOSPITAL_STAFF,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.HEALTHCARE_WORKER,
+                  UserRole.DOCTOR,
+                ]}
+              >
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/hospital" element={<HospitalDashboard />} />
+          </Route>
+
+          {/* 4. Pathology Lab Portal */}
+          <Route
+            element={
+              <ProtectedRoute
+                roles={[
+                  UserRole.LAB,
+                  UserRole.DOCTOR,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.HOSPITAL_STAFF,
+                ]}
+              >
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/lab" element={<LabDashboard />} />
+          </Route>
+
+          {/* 5. Pharmacy Portal */}
+          <Route
+            element={
+              <ProtectedRoute
+                roles={[
+                  UserRole.PHARMACY,
+                  UserRole.DOCTOR,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.HOSPITAL_STAFF,
+                ]}
+              >
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/pharmacy" element={<PharmacyDashboard />} />
+          </Route>
+
+          {/* 6. Healthcare Worker Portal */}
+          <Route
+            element={
+              <ProtectedRoute
+                roles={[
+                  UserRole.HEALTHCARE_WORKER,
+                  UserRole.DOCTOR,
+                  UserRole.HOSPITAL_STAFF,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                ]}
+              >
                 <AppLayout />
               </ProtectedRoute>
             }
@@ -81,15 +218,27 @@ export function App() {
             <Route path="/worker/offline-sync" element={<OfflineSyncPage />} />
           </Route>
 
-          {/* Admin portal */}
+          {/* 7. Hospital Admin Portal */}
           <Route
             element={
-              <ProtectedRoute roles={[UserRole.ADMIN]}>
+              <ProtectedRoute
+                roles={[
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.DOCTOR,
+                  UserRole.HOSPITAL_STAFF,
+                  UserRole.LAB,
+                  UserRole.PHARMACY,
+                  UserRole.HEALTHCARE_WORKER,
+                  UserRole.SECURITY,
+                ]}
+              >
                 <AppLayout />
               </ProtectedRoute>
             }
           >
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/audit-logs" element={<AuditLogsPage />} />
             <Route path="/admin/queue" element={<QueuePage />} />
             <Route path="/admin/workload" element={<WorkloadPage />} />
             <Route path="/admin/medicines" element={<AdminMedicinesPage />} />
@@ -99,7 +248,36 @@ export function App() {
             <Route path="/admin/analytics" element={<AnalyticsPage />} />
           </Route>
 
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* 8. Security Portal */}
+          <Route
+            element={
+              <ProtectedRoute
+                roles={[
+                  UserRole.SECURITY,
+                  UserRole.ADMIN,
+                  UserRole.SUPER_ADMIN,
+                  UserRole.HOSPITAL_STAFF,
+                ]}
+              >
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/security" element={<SecurityDashboard />} />
+          </Route>
+
+          {/* 9. Super Admin Portal */}
+          <Route
+            element={
+              <ProtectedRoute roles={[UserRole.SUPER_ADMIN, UserRole.ADMIN]}>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/super-admin" element={<SuperAdminDashboard />} />
+          </Route>
+
+          <Route path="/" element={<RootRedirect />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
